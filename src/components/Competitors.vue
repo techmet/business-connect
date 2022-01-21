@@ -1,7 +1,7 @@
 <template>
   <div class="competitor-form">
     <div class="header">
-      <b> <span class="header-text">COMPETITORS</span></b>
+      <span class="header-text">COMPETITORS</span>
     </div>
     <div class="competitor-box">
       <div class="competitor-box-text">Competitor name</div>

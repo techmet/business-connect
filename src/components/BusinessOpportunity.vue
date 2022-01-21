@@ -12,7 +12,7 @@
         <input type="button" v-on:click="createOpportunity" value="ADD" />
       </div>
     </div>
-    <div class="opportunity-form-labels">
+    <div v-if="opportunities.length > 0" class="opportunity-form-labels">
       <div
         v-for="item in opportunities"
         :key="item.id"
@@ -145,11 +145,10 @@ export default {
   border-bottom-left-radius: 3px;
   background-color: #404040;
   background-size: cover;
-  padding: 5px;
   border-style: solid;
   border-color: #333333;
   background-size: cover;
-  padding: 10px;
+  padding: 15px;
   border-top-width: 0px;
   display: flex;
   flex-wrap: wrap;
@@ -158,7 +157,6 @@ export default {
   height: 40px;
   line-height: 40px;
   width: 190px;
-  margin-top: 15px;
   padding: 0px 0px 0px 15px;
   border-top-width: 1px;
   border-style: solid;

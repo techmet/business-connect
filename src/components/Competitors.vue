@@ -5,23 +5,70 @@
     </div>
     <div class="competitor-box">
       <div class="competitor-box-text">Competitor name</div>
-      <div class="competitor-box-text-box"><input type="text" /></div>
+      <div class="competitor-box-text-box">
+        <input v-model="name" type="text" />
+      </div>
       <div class="competitor-box-button">
-        <input type="button" value="ADD" />
+        <input type="button" v-on:click="createCompetitor" value="ADD" />
       </div>
     </div>
     <div class="competitor-form-labels">
-      <div class="competitor-form-label">Apple</div>
-      <div class="competitor-form-label">Tesla</div>
-      <div class="competitor-form-label">IBM</div>
-      <div class="competitor-form-label">Microsoft</div>
+      <div
+        v-for="item in competitors"
+        :key="item.id"
+        class="competitor-form-label"
+      >
+        {{ item.name }}
+        <span class="competitor-clear" v-on:click="deleteCompetitor(item.id)"
+          >×</span
+        >
+      </div>
     </div>
   </div>
 </template>
 <script>
+import { API } from "aws-amplify";
+import { createCompetitor, deleteCompetitor } from "../graphql/mutations";
+import { listCompetitors } from "../graphql/queries";
 export default {
   name: "Competitors",
-  props: {},
+  async created() {
+    this.getCompetitors();
+  },
+  data() {
+    return {
+      name: "",
+      competitors: [],
+    };
+  },
+  methods: {
+    async createCompetitor() {
+      if (!this.name) return;
+      const competitor = await API.graphql({
+        query: createCompetitor,
+        variables: { input: { name: this.name } },
+      });
+      this.competitors = [
+        ...this.competitors,
+        competitor.data.createCompetitor,
+      ];
+      this.name = "";
+    },
+    async getCompetitors() {
+      const competitors = await API.graphql({
+        query: listCompetitors,
+      });
+      this.competitors = competitors.data.listCompetitors.items;
+    },
+    async deleteCompetitor(id) {
+      const competitor = { id };
+      await API.graphql({
+        query: deleteCompetitor,
+        variables: { input: competitor },
+      });
+      this.competitors = this.competitors.filter((item) => item.id !== id);
+    },
+  },
 };
 </script>
 <style scoped>
@@ -89,6 +136,7 @@ export default {
   text-align: center;
   margin-left: 15px;
   border: 1px;
+  cursor: pointer;
 }
 .competitor-form-labels {
   height: auto;
@@ -122,5 +170,12 @@ export default {
   font-size: 13px;
   color: #ffffff;
   text-decoration: none solid rgb(255, 255, 255);
+}
+.competitor-clear {
+  float: right;
+  vertical-align: top;
+  margin-right: 8px;
+  margin-top: -12px;
+  cursor: pointer;
 }
 </style>

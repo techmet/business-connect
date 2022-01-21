@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-businessconnect-dev-182529-authRole",
+      "UnauthRoleArn": "arn:aws:iam::591714798914:role/amplify-businessconnect-dev-182529-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::591714798914:role/amplify-businessconnect-dev-182529-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-businessconnect-dev-182529-deployment",
+      "UnauthRoleName": "amplify-businessconnect-dev-182529-unauthRole",
+      "StackName": "amplify-businessconnect-dev-182529",
+      "StackId": "arn:aws:cloudformation:us-east-1:591714798914:stack/amplify-businessconnect-dev-182529/4277c460-79f0-11ec-8530-126085ec6785",
+      "AmplifyAppId": "d3e0k4gqa62va8"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d3e0k4gqa62va8",
+          "type": "manual"
+        }
+      }
+    }
+  }
+}

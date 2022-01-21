@@ -5,23 +5,70 @@
     </div>
     <div class="opportunity-box">
       <div class="opportunity-box-text">Opportunity name</div>
-      <div class="opportunity-box-text-box"><input type="text" /></div>
+      <div class="opportunity-box-text-box">
+        <input v-model="name" type="text" />
+      </div>
       <div class="opportunity-box-button">
-        <input type="button" value="ADD" />
+        <input type="button" v-on:click="createOpportunity" value="ADD" />
       </div>
     </div>
     <div class="opportunity-form-labels">
-      <div class="opportunity-form-label">Apple</div>
-      <div class="opportunity-form-label">Tesla</div>
-      <div class="opportunity-form-label">IBM</div>
-      <div class="opportunity-form-label">Microsoft</div>
+      <div
+        v-for="item in opportunities"
+        :key="item.id"
+        class="opportunity-form-label"
+      >
+        {{ item.name }}
+        <span class="opportunity-clear" v-on:click="deleteOpportunity(item.id)"
+          >×</span
+        >
+      </div>
     </div>
   </div>
 </template>
 <script>
+import { API } from "aws-amplify";
+import { createOpportunity, deleteOpportunity } from "../graphql/mutations";
+import { listOpportunities } from "../graphql/queries";
 export default {
   name: "BusinessOpportunity",
-  props: {},
+  async created() {
+    this.getOpportunities();
+  },
+  data() {
+    return {
+      name: "",
+      opportunities: [],
+    };
+  },
+  methods: {
+    async createOpportunity() {
+      if (!this.name) return;
+      const opportunity = await API.graphql({
+        query: createOpportunity,
+        variables: { input: { name: this.name } },
+      });
+      this.opportunities = [
+        ...this.opportunities,
+        opportunity.data.createOpportunity,
+      ];
+      this.name = "";
+    },
+    async getOpportunities() {
+      const opportunities = await API.graphql({
+        query: listOpportunities,
+      });
+      this.opportunities = opportunities.data.listOpportunities.items;
+    },
+    async deleteOpportunity(id) {
+      const opportunity = { id };
+      await API.graphql({
+        query: deleteOpportunity,
+        variables: { input: opportunity },
+      });
+      this.opportunities = this.opportunities.filter((item) => item.id !== id);
+    },
+  },
 };
 </script>
 <style scoped>
@@ -89,6 +136,7 @@ export default {
   text-align: center;
   margin-left: 15px;
   border: 1px;
+  cursor: pointer;
 }
 .opportunity-form-labels {
   height: auto;
@@ -122,5 +170,12 @@ export default {
   font-size: 13px;
   color: #ffffff;
   text-decoration: none solid rgb(255, 255, 255);
+}
+.opportunity-clear {
+  float: right;
+  vertical-align: top;
+  margin-right: 8px;
+  margin-top: -12px;
+  cursor: pointer;
 }
 </style>

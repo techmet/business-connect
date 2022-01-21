@@ -309,7 +309,7 @@ export default {
 .connection-box-button {
   margin-left: auto;
   margin-top: 15px;
-  margin-right: 15px;
+  margin-right: 10px;
 }
 .connection-form-list {
   height: 104px;
